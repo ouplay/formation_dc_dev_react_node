@@ -1,0 +1,18 @@
+.header {
+    background-color: lightcoral;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header__name {
+    margin: 0;
+    color: white;
+  }
+  
+  .header__logo, .header__menu-burger {
+    height: 100%;
+  }
+  
