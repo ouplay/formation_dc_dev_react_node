@@ -2,28 +2,25 @@
 const express = require('express')
 const app = express()
 
-let connect = require("./connection.js")
 let config = require("./config.js")
 
+var cors = require('cors')
+
+const todoRouter = require('./routers/todo.js');
+
+var corsOptions = {
+  origin: ['http://localhost:3000'],
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions))
+app.use(express.json())
+
 app.get('/', function (req, res) {
-  res.send('Hello World!')
-
+  res.send("Bienvenue sur l'api Todo");
 })
 
-app.get('/todo', async (req, res) => {
-
-  let {db_client, db_connection} = await connect()
-  
-  db_connection.collection('todo').find({}).toArray((err, result) => {
-    if(err) return console.log(err)
-
-    console.log('todo :', result)
-
-    db_client.close()
-    res.send(result)
-   
-  })
-})
+app.use('/todo', todoRouter);
 
 
 app.listen(config.port, function () {

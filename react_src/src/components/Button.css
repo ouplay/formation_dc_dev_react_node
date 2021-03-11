@@ -1,0 +1,30 @@
+.button {
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  background: var(--main-bg-color);
+  box-shadow: 2px 2px 4px var(--dark-shadow-color), -2px -2px 4px var(--light-shadow-color);
+  padding: 1em 2em;
+  transition: all 0.2s ease;
+}
+
+.button:focus {
+    background: linear-gradient(145deg, var(--light-gradient-bg-color), var(--dark-gradient-bg-color));
+}
+
+
+.button:hover {
+  background: linear-gradient(145deg, var(--dark-gradient-bg-color), var(--light-gradient-bg-color));
+}
+
+.button:active {
+    background: var(--main-bg-color);
+    box-shadow: inset 2px 2px 4px var(--dark-shadow-color), inset -2px -2px 4px var(--light-shadow-color);
+}
+
+.button:disabled {
+    background: var(--main-bg-color);
+    box-shadow: none;
+}
+  

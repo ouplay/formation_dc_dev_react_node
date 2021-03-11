@@ -1,7 +1,20 @@
 .todo-item {
+    display: grid;
+    grid-template-columns: 1fr 200px 200px;
+    gap: 32px;
+}
 
+.todo-item__title {
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  padding: 0px 64px;
+  transition: all 0.5s ease;
 }
 
 .todo-item__title--done {
     text-decoration: line-through;
+    color: grey;
+}
+
+.todo-item__button {
 }

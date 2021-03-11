@@ -1,0 +1,15 @@
+.todo-list {
+    width: 100%;
+}
+
+.todo-list__add-panel {
+    margin-bottom: 64px;
+}
+
+.todo-list__input {
+    margin-right: 16px;
+}
+
+.todo-list__item {
+    margin-bottom: 32px;
+}

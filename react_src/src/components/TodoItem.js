@@ -1,17 +1,20 @@
 import React from 'react';
+import Button from './Button';
 import './TodoItem.css'
 
 export default function TodoItem (props) {
 
     const handleDone = () => {
-        props.onUpdate({...props.item, done: !props.item.done})
+        let newItem = {...props.item, done: !props.item.done}
+        console.log("newItem", newItem)
+        props.onUpdate(newItem)
     }
 
     return (
-        <div className="todo-item">
+        <div className={`todo-item ${props.className || ""}`}>
             <p className={`todo-item__title ${props.item.done ? "todo-item__title--done" : ""}`}>{props.item.title}</p>
-            <button onClick={handleDone}>{props.item.done ? "Mark To do" : "Mark as done"}</button>
-            <button onClick={props.onDelete}>Delete</button>
+            <Button className="todo-item__button" onClick={handleDone}>{props.item.done ? "Mark To do" : "Mark as done"}</Button>
+            <Button onClick={props.onDelete}>Delete</Button>
         </div>
     )
 }
