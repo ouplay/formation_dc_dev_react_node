@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+import Button from "./Button";
+import Input from "./Input";
+import TodoItem from "./TodoItem";
+
+import './TodoList.css'
 
 const TodoList = (props) => {
   const [tasks, setTasks] = useState([
@@ -31,43 +36,27 @@ const TodoList = (props) => {
   };
 
   return (
-    <div>
-      <input
+    <div className="todo-list">
+      <Input
         value={inputValue}
         onChange={(e) => {
           setInputValue(e.target.value);
         }}
       />
-      <button onClick={handleAdd}>Ajouter la tâche</button>
+      <Button onClick={handleAdd}>Ajouter la tâche</Button>
 
       <ul>
         {tasks.map((task, index) => {
-          console.log(index, task);
           return (
-            <li key={index}>
-              <p
-                style={{
-                  textDecoration:
-                    task.done ? "line-through" : "initial",
-                }}
-              >
-                {task.title}
-              </p>
-              <button
-                onClick={() => {
-                  handleDone(index);
-                }}
-              >
-                {task.done ? "Reprendre" : "Terminer"}
-              </button>
-              <button
-                onClick={() => {
-                  handleDelete(index);
-                }}
-              >
-                Supprimer
-              </button>
-            </li>
+            <TodoItem 
+            key={index} 
+            item={task} 
+            onDelete={() => {
+              handleDelete(index);
+            }} 
+            onDone={() => {
+              handleDone(index);
+            }}/>
           );
         })}
       </ul>
