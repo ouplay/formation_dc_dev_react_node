@@ -5,14 +5,14 @@ import './Todo.css'
 
 
 export default function Todo(props) {
-    const [list, updateTodoList] = useTodoState(
+    const [list, setList] = useTodoState(
         "60489fc59da4975e9aa09668"
-      );
+    );
     
 
     return (
         <Page className="todo">
-            <TodoList list={list} onUpdate={updateTodoList}/>
+            <TodoList list={list} onUpdate={setList}/>
         </Page>
     )
 }
