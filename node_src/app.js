@@ -21,7 +21,6 @@ app.get("/", function (req, res) {
 
 app.get("/tasks", async (req, res) => {
   let { db_client, db_connection } = await connect();
-
   db_connection
     .collection("tasks")
     .find({})
@@ -52,6 +51,106 @@ app.post("/tasks", async (req, res, next) => {
       next(err)
     });
 });
+
+app.post("/tasks/:id",  async (req, res, next) => {
+
+  console.log("update");
+  console.log(req.params.id)
+  console.log(req.body)
+
+  let { db_client, db_connection } = await connect();
+
+   try {
+     let result = await db_connection
+     .collection("tasks")
+     .updateOne(
+       {_id: ObjectId(req.params.id)},
+       {
+        $set: req.body
+       }
+      ) 
+     if(result.matchedCount === 0) {
+       next({code: 400, message: "No task was updated, id doesn't exist"})
+     } else {
+       res.send("ok")
+     }
+   } catch(err) {
+     console.log(err);
+     next(err)
+   }
+})
+
+app.delete("/tasks/",  async (req, res, next) => {
+  let { db_client, db_connection } = await connect();
+
+   try {
+     let result = await db_connection
+     .collection("tasks")
+     .deleteMany({})
+ 
+     res.send("ok")
+   } catch(err) {
+     console.log(err);
+     next(err)
+   }
+})
+
+
+
+app.delete("/tasks/many/:status",  async (req, res, next) => {
+  let { db_client, db_connection } = await connect();
+
+
+  console.log("many")
+
+   try {
+
+    let filter;
+
+    if(req.params.status === "pending") {
+      filter = {done: false};
+    } else if(req.params.status === "is-done") {
+      filter = {done: true};
+    } else if(req.params.status === "all") {
+      filter = {};
+    } else {
+      throw new Error("Operation does not exist")
+    }
+
+     let result = await db_connection
+     .collection("tasks")
+     .deleteMany(filter)
+ 
+     res.send("ok")
+   } catch(err) {
+     console.log(err);
+     next(err)
+   }
+})
+
+
+app.delete("/tasks/one/:id",  async (req, res, next) => {
+  console.log("one")
+
+   let { db_client, db_connection } = await connect();
+
+    try {
+      let result = await db_connection
+      .collection("tasks")
+      .deleteOne({_id: ObjectId(req.params.id)})
+  
+      if(result.deletedCount === 0) {
+        next({code: 400, message: "No task was deleted"})
+      } else {
+        res.send("ok")
+      }
+    } catch(err) {
+      console.log(err);
+      next(err)
+    }
+})
+
+
 
 
 app.listen(config.port, function () {
