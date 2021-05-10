@@ -4,60 +4,76 @@ import Input from "./Input";
 import TodoItem from "./TodoItem";
 import axios from "axios";
 
-
-import './TodoList.css'
+import "./TodoList.css";
 
 const TodoList = (props) => {
-
-
-
-
-
   const [tasks, setTasks] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
+  console.log(tasks);
+
   useEffect(() => {
-    //Ici on va récupérer les taches sur l'api et les insérer dans notre state React.
-
-    console.log("Lancement de la requête");
-    axios.get("http://localhost:3001/tasks").then((response) => {
-      console.log("Je suis dans le then");
-      console.log(response.data);
-      setTasks(response.data);
-    }).catch((err) => {
-      console.log("error", err)
-    })
-
-    console.log("Je suis après le then");
-    
-
-
-  }, [])
-
-  console.log("tasks : ", tasks);
-  console.log("inputValue : ", inputValue);
+    axios
+      .get("http://localhost:3001/tasks")
+      .then((response) => {
+        setTasks(response.data);
+      })
+      .catch((err) => {
+        alert(
+          "Une erreur est survenue lors du chargement de vos données, veuillez réessayer ultérieurement."
+        );
+      });
+  }, []);
 
   const handleAdd = () => {
-    let newTask = { title: inputValue, done: false }
-    let newTasks = [...tasks, newTask ];
-    setTasks(newTasks);
-    //Faire une appel api (axios) en POST sur /tasks avec les infos de la tache
-    axios.post('http://localhost:3001/tasks', newTask);
+    let newTask = { title: inputValue, done: false };
+
+    axios
+      .post("http://localhost:3001/tasks", newTask)
+      .then((response) => {
+        newTask._id = response.data;
+        let newTasks = [...tasks, newTask];
+        setTasks(newTasks);
+      })
+      .catch(() => {
+        alert(
+          "Une erreur est survenue lors du l'ajout de votre tâche, veuillez réessayer ultérieurement."
+        );
+      });
+
     setInputValue("");
   };
 
   const handleDelete = (index) => {
     let newTasks = [...tasks];
     newTasks.splice(index, 1);
-    setTasks(newTasks);
+    const taskToDelete = tasks[index];
+    const taskId = taskToDelete._id;
+    axios
+      .delete("http://localhost:3001/tasks/one/" + taskId)
+      .then(() => {
+        setTasks(newTasks);
+      })
+      .catch(() => {
+        alert("Une erreur est survenue lors de la suppression de cette tâche");
+      });
   };
 
   const handleDone = (index) => {
     let newTasks = [...tasks];
-
-    newTasks[index].done = !newTasks[index].done;
-
-    setTasks(newTasks);
+    const taskToUpdate = tasks[index];
+    const newStatus = !taskToUpdate.done;
+    newTasks[index].done = newStatus;
+    axios
+      .post("http://localhost:3001/tasks/" + taskToUpdate._id, {
+        done: newStatus,
+      })
+      .then(() => {
+        setTasks(newTasks);
+      })
+      .catch(() => {
+        alert("Une erreur est survenue lors de la modification de cette tâche");
+      });
   };
 
   return (
@@ -73,15 +89,16 @@ const TodoList = (props) => {
       <ul>
         {tasks.map((task, index) => {
           return (
-            <TodoItem 
-            key={index} 
-            item={task} 
-            onDelete={() => {
-              handleDelete(index);
-            }} 
-            onDone={() => {
-              handleDone(index);
-            }}/>
+            <TodoItem
+              key={index}
+              item={task}
+              onDelete={() => {
+                handleDelete(index);
+              }}
+              onDone={() => {
+                handleDone(index);
+              }}
+            />
           );
         })}
       </ul>
