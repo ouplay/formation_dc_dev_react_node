@@ -1,9 +1,22 @@
 .todo-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.todo-item__text {
+  text-align: center;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .todo-item__button {
-    margin-left: 2em;
+  margin-left: 8px;
+}
+
+.todo-item__actions {
+  margin-left: 16px;
+  display: flex;
+  flex-direction: row;
 }

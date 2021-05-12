@@ -5,6 +5,8 @@
     box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     border: solid 1px transparent;
-    padding: auto 16px;
+    padding: 6px 16px;
     height: 32px;
+    display: inline-block;
+    white-space: nowrap;
 }

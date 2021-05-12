@@ -18,13 +18,13 @@ const TodoItem = (props) => {
           className="todo-item__button todo-item__button--done"
           onClick={props.onDone}
         >
-          {props.item.done ? "Reprendre" : "Terminer"}
+          {props.item.done ? "←" : "✓"}
         </Button>
         <Button
           className="todo-item__button todo-item__button--delete"
           onClick={props.onDelete}
         >
-          Supprimer
+          ✗
         </Button>
       </div>
     </li>

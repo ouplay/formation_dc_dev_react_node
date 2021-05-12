@@ -3,7 +3,7 @@ const app = express();
 
 const session = require("express-session");
 
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 const connect = require("./connection.js");
 const config = require("./config.js");
@@ -14,22 +14,27 @@ const { ObjectId } = require("mongodb");
 const corsOptions = {
   origin: ["http://localhost:3000"],
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  credentials: true,
 };
 
 const verifySession = (req, res, next) => {
-  if (req.session.loggedIn === true) {
-    console.log("Logged in, you can proceed")
-    next()
+  if (req.session && req.session.loggedIn === true) {
+    console.log("Logged in, you can proceed");
+    next();
   } else {
     res.status(403);
-    console.log("You must be authenticated to proceed")
-    res.send("You must be authenticated")
+    console.log("You must be authenticated to proceed");
+    res.send("You must be authenticated");
   }
-}
+};
 
-app.use(session({secret:'Keep it secret'
-,name:'uniqueSessionID'
-,saveUninitialized:false}));
+app.use(
+  session({
+    secret: "Keep it secret",
+    name: "uniqueSessionID",
+    saveUninitialized: false,
+  })
+);
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -40,10 +45,12 @@ app.get("/", verifySession, function (req, res) {
 
 app.get("/tasks", verifySession, async (req, res) => {
   try {
+    const username = req.session.username;
+
     let { db_client, db_connection } = await connect();
     db_connection
       .collection("tasks")
-      .find({})
+      .find({ created_by: username })
       .toArray((err, result) => {
         if (err) return console.log(err);
 
@@ -65,6 +72,9 @@ app.post("/tasks", verifySession, async (req, res, next) => {
 
   try {
     let { db_client, db_connection } = await connect();
+
+    const username = req.session.username;
+    req.body.created_by = username;
 
     db_connection
       .collection("tasks")
@@ -90,14 +100,16 @@ app.post("/tasks/:id", verifySession, async (req, res, next) => {
   try {
     let { db_client, db_connection } = await connect();
 
+    const username = req.session.username;
+
     let result = await db_connection.collection("tasks").updateOne(
-      { _id: ObjectId(req.params.id) },
+      { _id: ObjectId(req.params.id), created_by: username },
       {
         $set: req.body,
       }
     );
     if (result.matchedCount === 0) {
-      next({ code: 400, message: "No task was updated, id doesn't exist" });
+      next({ code: 400, message: "No task was updated" });
     } else {
       res.send("ok");
     }
@@ -114,17 +126,19 @@ app.delete("/tasks/many/:status", verifySession, async (req, res, next) => {
   console.log("many");
 
   try {
-    let filter;
+    const username = req.session.username;
+
+    let filter = {created_by: username}; //all
 
     if (req.params.status === "pending") {
-      filter = { done: false };
+      filter = {...filter, done: false };
     } else if (req.params.status === "is-done") {
-      filter = { done: true };
-    } else if (req.params.status === "all") {
-      filter = {};
-    } else {
+      filter = {...filter, done: true };
+    } else if (req.params.status !== "all") {
       throw new Error("Operation does not exist");
     }
+
+
 
     db_connection
       .collection("tasks")
@@ -155,9 +169,12 @@ app.delete("/tasks/one/:id", verifySession, async (req, res, next) => {
   let { db_client, db_connection } = await connect();
 
   try {
+
+    const username = req.session.username;
+
     let result = await db_connection
       .collection("tasks")
-      .deleteOne({ _id: ObjectId(req.params.id) });
+      .deleteOne({ _id: ObjectId(req.params.id), created_by: username});
 
     if (result.deletedCount === 0) {
       next({ code: 400, message: "No task was deleted" });
@@ -185,75 +202,76 @@ app.post("/auth/signup", async (req, res) => {
         throw new Error("User already exists");
       }
 
-      newUser.password = await bcrypt.hash(newUser.password, 10)
+      newUser.password = await bcrypt.hash(newUser.password, 10);
 
       await db_connection.collection("users").insertOne(newUser);
 
       res.send("User successfuly signed up");
-      console.log("singup ok")
-
+      console.log("singup ok");
     } catch (err) {
       res.status(400);
-      res.send(err.message)
-      console.log(err.message)
-
+      res.send(err.message);
+      console.log(err.message);
     }
   } catch (err) {
     res.status(500);
-    console.log("Server error")
+    console.log("Server error");
     res.send("Server error");
   }
 });
 
 app.post("/auth/login", async (req, res) => {
-
   try {
     const loginData = req.body;
-  
+
     let { db_client, db_connection } = await connect();
 
-    let user = await db_connection.collection("users").findOne({username: loginData.username});
+    let user = await db_connection
+      .collection("users")
+      .findOne({ username: loginData.username });
     try {
-      if(!user) {
+      if (!user) {
         throw new Error("Invalid username");
       }
 
+      const samePassword = await bcrypt.compare(
+        loginData.password,
+        user.password
+      );
 
-      const samePassword = await bcrypt.compare(loginData.password, user.password);
-
-      if(!samePassword) {
-        throw new Error("Invalid password")
+      if (!samePassword) {
+        throw new Error("Invalid password");
       }
 
       req.session.username = user.username;
       req.session.loggedIn = true;
 
       res.send("Logged in");
-
-    } catch(err) {
+    } catch (err) {
       res.status(403);
       console.log(err.message);
-      res.send("Invalid credentials")
+      res.send("Invalid credentials");
     }
-
-  } catch(err) {
+  } catch (err) {
     res.status(500);
     res.send("Server error");
   }
+});
 
+app.get("/auth/check", verifySession, (req, res) => res.send("Authenticated"));
 
-})
-
-app.post('/auth/logout', (req, res) => {
+app.post("/auth/logout", (req, res) => {
   req.session.destroy((err) => {
-    if(err) {
+    if (err) {
+      console.log(err);
       res.status(500);
-      res.send("An error occured while logging out")
+      res.send("An error occured while logging out");
     } else {
-      res.send("Logged out")
+      console.log("Logged out");
+      res.send("Logged out");
     }
-  })
-})
+  });
+});
 
 app.listen(config.port, function () {
   console.log(`Example app listening on port ${config.port} !`);

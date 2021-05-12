@@ -1,0 +1,29 @@
+.auth-card {
+
+    margin: 32px;
+    padding: 32px;
+    padding-top: 8px;
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+.login {
+
+}
+
+.signup {
+
+}
+
+.auth-card__input {
+    margin-bottom: 32px;
+}
+
+.auth-card__button {
+    margin-top: 16px;
+    margin-bottom: 64px;
+    align-self: center;
+}
+
