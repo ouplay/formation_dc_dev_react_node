@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     borderRadius:5,
     borderWidth: 1,
     padding:5,
-    borderColor: 'red',
+    borderColor: '#666',
     marginRight: 8,
     marginLeft: 8,
   },
@@ -59,6 +59,8 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
+    
+    
   },
 });
 

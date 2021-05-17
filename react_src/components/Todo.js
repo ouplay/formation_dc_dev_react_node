@@ -42,11 +42,11 @@ const styles = StyleSheet.create({
     paddingLeft:5,
     paddingRight:5,
     borderStyle: "solid",
-    borderColor: "#444",
-    borderWidth: 1,
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
+    borderColor: "#555",
+    borderWidth: 2,
+    borderRadius:5,
     flex: 1,
+    backgroundColor:"#444"
   }
 })
 

@@ -23,8 +23,12 @@ const TodoList = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#ecf0f1",
-    flex: 1
+    paddingTop:30,
+    marginTop:10,
+    marginBottom:30,
+    backgroundColor: "#555",
+    flex: 1,
+    borderRadius:5,
   }
 })
 
