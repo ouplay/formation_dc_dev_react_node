@@ -9,7 +9,7 @@ const TodoListItem = (props) => {
         {props.title}
       </Text>
       <Button
-        style={styles.button}
+        style={styles.buttonDelete}
         title="X"
         onPress={() => {
           let newList = [...props.list];
@@ -21,8 +21,8 @@ const TodoListItem = (props) => {
       />
       {props.done === false && (
         <Button
-          style={styles.button}
-          title="Terminer"
+          style={styles.buttonDo}
+          title="OK"
           onPress={() => {
             let newList = [...props.list];
 
@@ -38,24 +38,21 @@ const TodoListItem = (props) => {
 
 const styles = StyleSheet.create({
   container: {
+    padding:2,
+    
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    height: 25,
+    
   },
   text: {
-    
+    margin:10,    
     flex: 10,
     borderStyle: 'solid',
-    borderRadius:5,
+    borderRadius:40,
     borderWidth: 1,
     padding:5,
-    color:"#72ecff",   //"#bdc3c7"
-    borderColor: '#1a283b',
-    marginRight: 8,
-    marginLeft: 8,
-    marginBottom:.5,
-    padding:4,
-
+    color:"#aaa69d",   //"#bdc3c7",
+    borderColor: '#2f3640',
   },
   textDone: {
     textDecorationLine: 'line-through',
@@ -63,9 +60,16 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    
-    
   },
+  buttonDelete:{
+    borderRadius:50,
+    backgroundColor:"#ff5252",
+    
+
+  },
+  buttonDo: {
+    
+  }
 });
 
 export default TodoListItem;

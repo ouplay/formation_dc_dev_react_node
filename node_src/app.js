@@ -1,32 +1,20 @@
 
+require('dotenv').config()
+require('./persistence/connection').config()
+
+const express = require('express')
+const mongoose = require('mongoose')
+const app = express()
+
+let connect = require("./persistence/connection.js")
+
 const express = require('express')
 const app = express()
 
-let connect = require("./connection.js")
-let config = require("./config.js")
+app.use(express.json())
 
-app.get('/', function (req, res) {
-  res.send('Hello World!')
-
-})
-
-app.get('/todo', async (req, res) => {
-
-  let {db_client, db_connection} = await connect()
-  
-  db_connection.collection('todo').find({}).toArray((err, result) => {
-    if(err) return console.log(err)
-
-    console.log('todo :', result)
-
-    db_client.close()
-    res.send(result)
-   
-  })
-})
+const noteRouter = require('./route/note')
+app.use('/', noteRouter)
 
 
-app.listen(config.port, function () {
-  console.log(`Example app listening on port ${config.port} !`)
-})
-
+app.listen(process.env.PORT)

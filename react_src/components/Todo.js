@@ -29,8 +29,9 @@ const Todo = () => {
 
     
   return <View style={styles.container}>
-    <TodoAdd list={list} setList={setList}/>
-    <TodoList list={list} setList={setList}/>
+    
+    <TodoList  list={list} setList={setList}/>
+    <TodoAdd  list={list} setList={setList}/>
   </View>
 
 }
@@ -44,10 +45,12 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderColor: "#555",
     borderWidth: 2,
-    borderRadius:5,
+    borderRadius:15,
     flex: 1,
     backgroundColor:"#2c3e50"
-  }
+  },
+  
+  
 })
 
 

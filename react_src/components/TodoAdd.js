@@ -8,7 +8,7 @@ const TodoAdd = (props) => {
   const [inputValue, setInputValue] = useState("");
 
   return <View style={styles.container}>
-    <TextInput  placeholder="Créer une nouvelle note :" value={inputValue} onChangeText={(value) => {
+    <TextInput style={styles.text}  placeholder="Créer une nouvelle note :" value={inputValue} onChangeText={(value) => {
       console.log(value)
       setInputValue(value);
     }}/>
@@ -29,11 +29,18 @@ const TodoAdd = (props) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  text: {
+    margin:5,
+    padding:7,
     color:"#FFF",
-    justifyContent: 'space-between',
+    backgroundColor:"#34495e",
+    borderRadius:5,
   }
 
 
 })
+
 
 export default TodoAdd;
