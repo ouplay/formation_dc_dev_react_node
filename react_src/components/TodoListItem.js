@@ -43,15 +43,19 @@ const styles = StyleSheet.create({
     height: 25,
   },
   text: {
-    margin:1,
+    
     flex: 10,
     borderStyle: 'solid',
     borderRadius:5,
     borderWidth: 1,
     padding:5,
-    borderColor: '#666',
+    color:"#72ecff",   //"#bdc3c7"
+    borderColor: '#1a283b',
     marginRight: 8,
     marginLeft: 8,
+    marginBottom:.5,
+    padding:4,
+
   },
   textDone: {
     textDecorationLine: 'line-through',

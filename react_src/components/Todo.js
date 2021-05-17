@@ -38,7 +38,7 @@ const Todo = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop:15,
+    paddingTop:10,
     paddingLeft:5,
     paddingRight:5,
     borderStyle: "solid",
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius:5,
     flex: 1,
-    backgroundColor:"#444"
+    backgroundColor:"#2c3e50"
   }
 })
 
